@@ -17,7 +17,7 @@
 
         <div class="@Url.Content("col-md-4 bottom-product simpleCart_shelfItem Trang"+ @itrang.ToString())">
             <div class="product-at ">
-                <a href="single.html">
+                <a href="#" data-masp="@item.MaSP" class="buy-item">
                     <img class="img-responsive" src="@Url.Content("~/Content/sanpham/" + item.HinhAnh)" alt="">
                     <div class="pro-grid">
                         <span class="buy-in">Đặt Mua</span>
@@ -62,6 +62,20 @@
     })
 
     $('.item_add').click(function () {
+        var maSP = $(this).attr('data-masp')
+        $.ajax({
+            type: 'POST',
+            data: {
+                MaSP: maSP
+            },
+            url: '/GioHang/themgiohangAjax',
+            success: function (ketqua) {
+                $('#divGiohang').html(ketqua);
+            }
+        })
+    });
+
+    $('.buy-item').click(function () {
         var maSP = $(this).attr('data-masp')
         $.ajax({
             type: 'POST',
