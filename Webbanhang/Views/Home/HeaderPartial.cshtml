@@ -1,0 +1,66 @@
+﻿
+<link href="~/Content/css/style-login.css" rel="stylesheet" type="text/css" />
+<div class="header-top">
+    <div class="container">
+        <div class="search">
+            @*tạo form submit về action tìm kiếm*@
+            @using(Html.BeginForm("layKQTimkiem", "Timkiem"))
+            {
+                <input type="text" name="sTukhoa"  value="Search " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}">
+                <input type="submit" value="Go">
+            }
+        </div>
+        <div class="header-left">
+            <ul>
+                @if (Session["Taikhoan"] != null)
+                {
+                    //Webbanhang.Models.thanhvien tv = (Webbanhang.Models.thanhvien)Session["taikhoan"];
+                    <li><a href="#">Hi, @Session["Taikhoan"]</a></li>
+                    <li><a href="#">@Html.ActionLink("Đăng Xuất", "Dangxuat", "Home")</a></li>
+                }
+                else
+                {
+                    <li><a href="#" id="btnDangnhap">Đăng Nhập</a></li>
+                    <li><a href="register.html">Đăng ký</a></li>
+                }
+
+
+            </ul>
+            @*Partial giỏ hàng*@
+            @Html.Action("GiohangPartial","GioHang" )
+            <div class="clearfix"> </div>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+
+
+<div id="popup_login">
+    <div class="wrapper">
+        <div style="text-align:right;margin-right:40px;position:absolute;top:10px;left:90%;">
+            <span id="close-form" class="btn" style="color:black;font-weight:bold">X</span>
+        </div>
+        <h2>Login</h2>
+        <div class="form-login">
+            @using (Ajax.BeginForm("Dangnhap", "Home",new AjaxOptions { InsertionMode=InsertionMode.Replace,UpdateTargetId="Thongbao"}))
+            {
+                <label>Username</label>
+                <input type="text" name="txtuser" placeholder="Username" required="">
+                <label>Password</label>
+                <input type="password" name="txtpass" placeholder="Password" required="">
+                <h5 id="Thongbao" style="font-weight:lighter;color:red;margin-top:10px"></h5>
+                <a href="#" class="pass">Forgot Password ?</a>
+                <input type="submit" value="LogIn">
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnDangnhap").click(function () {
+        $("#popup_login").show();
+    });
+    $("#close-form").click(AnForm);
+    function AnForm() {
+        $("#popup_login").hide();
+    }
+</script>

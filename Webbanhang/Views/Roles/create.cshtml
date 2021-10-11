@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Thêm quyền";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+
+
+}
+
+<div style="border-bottom:1px solid #808080;padding-bottom:4px;margin:5px">
+    <h3> Thêm quyền vào hệ thống</h3>
+</div>
+
+@using (Html.BeginForm("Create","Roles",FormMethod.Post,new {id= "FormRole" }))
+{
+    <div class="form-group" style="margin-top:10px">
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-6" style="display:flex;">
+                <label class="col-md-3">Mã quyền: </label>
+                <input type="text" name="RoleID" class="RoleID form-control" />
+            </div>
+            <span style="margin-left:10px;color:red" class="lblError"></span>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-6" style="display:flex;">
+                <label class="col-md-3">Tên quyền:</label>
+                <input type="text" name="RoleName" class="RoleName form-control" />
+            </div>
+        </div>
+    </div>
+    <div>
+        <a id="btnCreate_Role"  class="btn btn-success" >Create</a>
+        <a href="/Roles" class="btn btn-info">Quay lại</a>
+    </div>
+    <div class="clearfix" style="border-bottom:1px solid #808080;padding-bottom:4px;margin:5px"></div>
+}
+<script>
+    $('#btnCreate_Role').click(function (e) {
+        var _Role = $('.RoleID').val();
+        $.ajax({
+            type: "POST",
+            data: { RoleID: _Role },
+            dataType: 'html',
+            url: "/Roles/checkRole",
+            success: function (_bool) {
+                if (_bool == 'False') {
+                    $('.lblError').html('Quyền này đã tồn tại');
+                    $('.RoleID').focus();
+                    e.preventDefault();
+                } else {
+                    $('#FormRole').submit();
+                }
+            }
+        });
+    });
+</script>
+

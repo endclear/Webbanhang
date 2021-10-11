@@ -1,0 +1,53 @@
+﻿@using Webbanhang.Models;
+@using PagedList.Mvc;
+
+@model PagedList.IPagedList<sanpham>
+@{
+    ViewBag.Title = "loadSanpham";
+    Layout = "~/Views/Layout/ProductLayout.cshtml";
+}
+
+<div class="col-md-9 product1">
+    <div class=" bottom-product">
+        @foreach (var item in Model.OrderBy(n => n.DonGia))
+        {
+            <div class="col-md-4 bottom-product simpleCart_shelfItem">
+                <div class="product-at ">
+                    <a href="#" data-masp="@item.MaSP" class="buy-item">
+                        <img class="img-responsive" src="@Url.Content("~/Content/sanpham/"+item.HinhAnh)" alt="">
+                        <div class="pro-grid">
+                            <span class="buy-in">Đặt Mua</span>
+                        </div>
+                    </a>
+                </div>
+                <p class="tun">@item.TenSP</p>
+                @*<a href="#" class="item_add"><p class="number item_price">@item.DonGia.Value.ToString("#,##") VNĐ</p></a>*@
+                @*thêm giỏ hàng ajax*@
+                @Ajax.ActionLink(item.DonGia.Value.ToString("#,##") + " VNĐ", "themgiohangAjax", "GioHang", new { @masp = item.MaSP }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "divGiohang", InsertionMode = InsertionMode.Replace }, new { @class = "item_add number item_price" })
+                @*@Html.ActionLink(item.DonGia.Value.ToString("#,##") + " VNĐ","themgiohang","GioHang", new { @masp = item.MaSP, @sUrl = Request.Url.ToString() }, new { @class = "item_add number item_price" })*@
+            </div>
+        }
+        @*<div class="clearfix"> </div>*@
+    </div>
+
+</div>
+<div class="dlink">
+    Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
+    @Html.PagedListPager(Model, Page => Url.Action("loadSanpham", new {@maloaisp=ViewBag.maloaisp,@maNSX=ViewBag.maNSX, Page = Page }))
+</div>
+
+<script type="text/javascript">
+    $('.buy-item').click(function () {
+        var maSP = $(this).attr('data-masp')
+        $.ajax({
+            type: 'POST',
+            data: {
+                MaSP: maSP
+            },
+            url: '/GioHang/themgiohangAjax',
+            success: function (ketqua) {
+                $('#divGiohang').html(ketqua);
+            }
+        })
+    });
+</script>

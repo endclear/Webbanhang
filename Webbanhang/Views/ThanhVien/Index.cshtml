@@ -1,0 +1,69 @@
+﻿@using Webbanhang.Models
+@model IEnumerable<thanhvien>
+
+@{
+    ViewBag.Title = "Quản Lý Thành  Viên";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+}
+<link href="~/Content/Datatable/datatables.min.css" rel="stylesheet" />
+<style>
+    th{
+        text-align:center;
+    }
+</style>
+<div style="background:#fff;padding:5px">
+    <table id="MemberTable" class="table">
+        <thead class="bg-info">
+            <tr>
+                <th>STT</th>
+                <th>Mã TV</th>
+                <th>Tài khoản</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Loại thành viên</th>
+                <th>Sửa</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+                foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td>@i</td>
+                        <td>@item.MaTV</td>
+                        <td>@item.TaiKhoan</td>
+                        <td>@item.HoTen</td>
+                        <td>@item.Email</td>
+                        <td>@item.loaithanhvien.TenLoaiTV</td>
+                        <td><a href="#" class="btn btn-info">Sửa</a></td>
+                        <td><a href="/ThanhVien/PhanQuyen/@item.MaTV" class="btn btn-success">Phân quyền</a></td>
+                    </tr>
+                    i++;
+                }
+
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script src="~/Content/Datatable/datatables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#MemberTable').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": 'Display <select>' +
+                    '<option value="5">5</option>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="30">30</option>' +
+                    '<option value="-1">All</option>' +
+                    '</select> records'
+            }
+        });
+    });
+</script>

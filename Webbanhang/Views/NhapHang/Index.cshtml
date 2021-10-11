@@ -1,0 +1,173 @@
+﻿@using Webbanhang.Models
+@model PhieuNhap
+@{
+    ViewBag.Title = "Thông Tin Nhập Hàng";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+
+
+}
+
+<hr style="border:outset" />
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="form-group col-md-8">
+            <div class="col-md-3">
+                <label class="cotrol-label">Nhà cung cấp</label>
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("MaNCC", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MaNCC, "")
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            <div class="col-md-4">
+                <label class="cotrol-label">Ngày nhập</label>
+            </div>
+            <div class="col-md-8">
+                <input name="NgayNhap" type="text" id="datepicker" class="form-control" />
+                @Html.ValidationMessageFor(model => model.NgayNhap, "")
+            </div>
+        </div>
+
+    </div>
+    <hr />
+    <div>
+        @{ IEnumerable<sanpham> lstsanpham = ViewBag.Listsanpham as IEnumerable<sanpham>;}
+        <table class="table table-striped tblchitet">
+            <thead class="bg-info">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th></th>
+                </tr>
+            <thead />
+            <tbody>
+                <tr class="trAppend" data-id="-1" style="display:none;" >
+                    <td>
+                        <select class="ddlsanpham">
+                            @foreach (var item in lstsanpham)
+                            {
+                                <option value="@item.MaSP">@item.TenSP</option>
+                            }
+                        </select>
+                    </td>
+                    <td><input type="number" data-animal-type="bird"/></td>
+                    <td><input type="number"/></td>
+                    <td><input type="button" class="btn btn-danger btnDelete" value="-" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <input type="button" id="AddRow" class="btn btn-info" value="+" />
+        <input id="btnSubmit" type="submit" value="Create" class="btn btn-success" />
+    </div> 
+}
+
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<script>
+    $('#AddRow').click(function () {
+        var id_cuoi = $('.tblchitet tbody').find("tr:last-child").attr('data-id');
+        i = parseInt(id_cuoi) + 1;
+        var tdNoidung = $('.trAppend').html();
+        var trNoidung = "<tr class=\"trAppended\" data-id=" + i + " >" + tdNoidung + "</tr>";
+        $('.tblchitet').append(trNoidung);
+        LoadId();
+    });
+
+    $('body').delegate(".btnDelete", "click", function () {
+        $(this).closest(".trAppended").remove();
+        UpdateId();
+    });
+
+    function LoadId() {
+        $('.trAppended').each(function () {
+            var id = $(this).attr('data-id');
+            var masp = "[" + id + "].MaSP";
+            var soluongnhap = "[" + id + "].SoLuongNhap";
+            var dongia = "[" + id + "].DonGiaNhap";
+            $(this).find('select.ddlsanpham').attr("name", masp);
+            $(this).find('input[type="number"]').first().addClass("soluongnhap");
+            $(this).find('input[type="number"]').last().addClass("dongia");
+            $(this).find('input[type=number].soluongnhap').attr("name", soluongnhap);
+            $(this).find('input[type=number].dongia').attr("name", dongia);
+        });
+    }
+
+    function UpdateId() {
+        var id_cuoi = $('.trAppend').attr('data-id');
+        i = parseInt(id_cuoi) + 1;
+        $('.trAppended').each(function () {
+            var id = i;
+            var masp = "[" + id + "].MaSP";
+            var soluongnhap = "[" + id + "].SoLuongNhap";
+            var dongia = "[" + id + "].DonGiaNhap";
+            $(this).find('select.ddlsanpham').attr("name", masp);
+            $(this).find('input[type=number].soluongnhap').attr("name", soluongnhap);
+            $(this).find('input[type=number].dongia').attr("name", dongia);
+            $(this).attr("data-id", id);
+            i++;
+        });
+    }
+
+    $('#btnSubmit').click(function () {
+       
+        if (kiemtrasoluong() == false) {
+            return false;
+        }
+        else if (kiemtradongia() == false) {
+            return false;
+        }
+    });
+
+    function kiemtrasoluong() {
+        //$('.soluongnhap').each(function () {
+        //    var giatri = $(this).val();
+        //    //console.log("gia tri "+giatri);
+        //    if (giatri == null) {
+        //        console.log("  rong");
+        //    } else {
+        //        console.log("k rong");
+        //    }
+        //})
+        //return false;
+        var check = true;
+        $('.soluongnhap').each(function () {
+            var giatri = $(this).val();
+            console.log(giatri);
+            if (giatri == "" || isNaN(giatri) == true || giatri < 0) {
+                alert('Số lượng không hợp lệ');
+                check = false;
+                return check;
+            }
+        })
+        return check;
+    }
+
+    function kiemtradongia() {
+        var check = true;
+        $('.dongia').each(function () {
+            var giatri = $(this).val();
+            console.log(giatri);
+            if (giatri == "" || isNaN(giatri) == true || giatri < 0) {
+                alert('Đơn giá không hợp lệ');
+                check = false;
+                return check;
+            }
+        })
+        return check;
+    }
+
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        $('#datepicker').datepicker({
+            dateFormat: "mm/dd/yy"
+        });
+    })
+</script>
+
+

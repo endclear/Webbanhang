@@ -1,0 +1,149 @@
+﻿@using Webbanhang.Models
+@model IEnumerable<dondathang>
+@{
+    ViewBag.Title = "Đơn Đặt Hàng";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+}
+<link href="~/Content/Datatable/datatables.min.css" rel="stylesheet" />
+<style>
+    ul.nav li.active a {
+        color: #000;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        color: #fff;
+        cursor: default;
+        background-color: #f0f7f5;
+        border: 1px solid #ddd;
+        border-bottom-color: #f0f7f5;
+    }
+
+    ul.nav {
+        padding: 2px 2px 0 3px;
+        list-style: none;
+        background: #3f4e62;
+        border-radius: 3px;
+    }
+
+    .nav > li > a {
+        color: #fff;
+        font-size: 1.3rem;
+        cursor:pointer;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active option" data-status="0"><a>Tất cả đơn hàng</a></li>
+    <li role="presentation" class="option" data-status="1"><a>Chưa thanh toán</a></li>
+    <li role="presentation" class="option" data-status="2"><a>Chưa giao</a></li>
+    <li role="presentation" class="option" data-status="3"><a>Đã giao và thanh toán</a></li>
+</ul>
+
+<div class="BillCompelete" style="margin-top:25px;">
+    <table class="table ListBill">
+        <thead class="bg-info">
+            <tr>
+                <th>STT</th>
+                <th>Mã đơn đặt hàng</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt hàng</th>
+                <th>Giao hàng</th>
+                <th>Ngày giao hàng</th>
+                <th>Đã thanh toán</th>
+                <th>Ưu đãi</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="dataBill">
+               @{
+                    int i = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.MadonDH</td>
+                            <td>@item.Khachhang.TenKH</td>
+                            <td>@item.NgayDat.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@item.TinhTrangGiao</td>
+                            <td>@item.NgayGiao</td>
+                            <td>@item.DaThanhToan</td>
+                            <td>@item.UuDai</td>
+                            <td><a href="/DonDatHang/DuyetDonHang/@item.MadonDH" class="btn btn-success">Xem</a></td>
+                        </tr>
+                                i++;
+                    }
+
+               }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script src="~/Content/Datatable/datatables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $('.ListBill').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": 'Display <select>' +
+                    '<option value="5">5</option>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="30">30</option>' +
+                    '<option value="-1">All</option>' +
+                    '</select> records'
+            }
+        });
+    });
+
+
+    $('.option').click(function () {
+        var status = $(this).attr('data-status');
+        AjaxCallBill(status);
+    });
+    function AjaxCallBill(status) {
+        console.log(status);
+        $.ajax({
+            type: "POST",
+            data: {key: status},
+            url: "/DonDatHang/Index",
+            success: function (model) {
+               // console.log(model);
+                $('body').html(model);
+                $('.option').each(function () {
+                    $(this).removeClass('active');
+                    if ($(this).attr('data-status') == status) {
+                        $(this).addClass('active');
+                    }
+                });
+                $('.ListBill').DataTable({
+                    "pageLength": 5,
+                    "language": {
+                        "lengthMenu": 'Display <select>' +
+                            '<option value="5">5</option>' +
+                            '<option value="10">10</option>' +
+                            '<option value="20">20</option>' +
+                            '<option value="30">30</option>' +
+                            '<option value="-1">All</option>' +
+                            '</select> records'
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ThongKeAjax",
+                    success: function (data) {
+                        $('#UserOnline').html(data.online);
+                        $('#UserVisit').html(data.visit);
+                    }
+                })
+            }
+        });
+    }
+    //function Activeclass() {
+
+    //}
+
+    
+</script>

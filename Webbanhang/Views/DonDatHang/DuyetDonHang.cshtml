@@ -1,0 +1,266 @@
+﻿@using Webbanhang.Models
+@model dondathang
+@{
+    ViewBag.Title = "Duyệt Đơn Đặt Hàng";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+
+
+}
+<style>
+    th {
+        text-align: center;
+    }
+</style>
+@using (Html.BeginForm("DuyetDonHang","DonDatHang",FormMethod.Post))
+{
+    <div class="Bill row container-fluid" style="background:#fff;width:100%;margin-left:1px">
+        <br />
+        <div class="" style="width: 100%">
+            <div style="text-align: center">
+                <h3>HÓA ĐƠN ĐẶT HÀNG </h3>
+                <small id="date"></small>
+            </div>
+            <div style="width:100%;display:flex;margin-top:15px;">
+                <input type="hidden" name="MadonDH" value="@Model.MadonDH"/>
+                <span style="width:33.33%">Mã đơn hàng: <label>@Model.MadonDH</label></span>
+                <span style="width:33.33%">Khách hàng: <label>@Model.Khachhang.TenKH</label></span>
+                <span style="width:33.33%">Ngày đặt: <label>@Model.NgayDat.Value.ToString("dd/MM/yyyy")</label></span>
+            </div>
+            <div style="width:100%;display:flex">
+                <span style="width:33.33%">Tình trạng giao hàng: <label>@Model.TinhTrangGiao</label></span>
+                <span style="width:33.33%">Trạng thái thanh toán: <label>@Model.DaThanhToan</label></span>
+            </div>
+        </div>
+
+        <div class="DetailBill" style="margin-top:25px;">
+            <table id="DetailBill" style="width:100%;border:1px solid #ddd">
+                <thead style="background:#5bc0de">
+                    <tr>
+                        <th style="border:1px solid #ddd;padding:7px">STT</th>
+                        <th style="border:1px solid #ddd">Mã sản phẩm</th>
+                        <th style="border:1px solid #ddd">Tên sản phẩm</th>
+                        <th style="border:1px solid #ddd">Hình ảnh</th>
+                        <th style="border:1px solid #ddd">Số lượng</th>
+                        <th style="border:1px solid #ddd">Đơn giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ IEnumerable<CT_DonDH> lstChitietDDH = ViewBag.listChiTietDDH as IEnumerable<CT_DonDH>;
+                        int i = 1;
+                        foreach (var item in lstChitietDDH)
+                        {
+                            <tr style="text-align:center;border:1px solid #ddd">
+                                <td style="border:1px solid #ddd">@i</td>
+                                <td style="border:1px solid #ddd">@item.MaSP</td>
+                                <td style="border:1px solid #ddd">@item.sanpham.TenSP</td>
+                                <td style="border:1px solid #ddd"><img src="~/Content/sanpham/@item.sanpham.HinhAnh" width="120px" height="70px" style="height:auto; padding: 4px; background-color: #fff; border: 1px solid #ddd; border-radius: 4px;" /></td>
+                                <td style="border:1px solid #ddd">@item.SoLuong</td>
+                                <td style="border:1px solid #ddd">@item.DonGia.ToString("#,##")</td>
+                            </tr>
+                            i++;
+                        }
+                        <tr class="">
+                            <td colspan="6" style="padding:7px">
+                                <label>Tổng tiền:</label>
+                                <input id="Total" type="hidden" value="@lstChitietDDH.Sum(n => n.DonGia * n.SoLuong)" />
+                                <label>&ensp;&ensp; @lstChitietDDH.Sum(n => n.DonGia * n.SoLuong).ToString("#,##") &ensp;</label>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <div style="margin-left:20px;margin-bottom:20px">
+                Bằng chữ:<i style="font-weight:bold" id="TotalInWords"></i>
+            </div>
+            <div style="width:90%;margin:0 auto;display:flex;">
+                <div style="width:50%">Người lập</div>
+                <div style="width:50%;text-align:right">Đơn vị bán hàng</div>
+                <div style="height:50px"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <a id="btnPrint" onclick="$('.Bill').print();" class="btn btn-info">In hóa đơn</a>
+            @{ if (Model.DaThanhToan == true && Model.TinhTrangGiao == false)
+                {
+                    <input type="submit" value="Giao hàng" class="btn btn-info" />
+                }
+            }
+        </div>
+        <div class="col-md-6 text-right">
+            <button class="btn btn-info text-right" onclick="parent.location='/DonDatHang'">Quay lại</button>
+        </div>
+
+    </div>
+}
+
+
+
+<script>
+    $(document).ready(function () {
+        var date = new Date();
+        var Total = parseInt($('#Total').val());
+        $("#date").html('Hà Nội, ngày ' + date.getDate() + ' tháng ' + (date.getMonth() + 1) + ' năm ' + date.getFullYear());
+        $('#TotalInWords').html(Total.ReadNumber());
+        console.log('so', Total);
+    })
+    var ChuSo = new Array(" không ", " một ", " hai ", " ba ", " bốn ", " năm ", " sáu ", " bảy ", " tám ", " chín ");
+    var Tien = new Array("", " nghìn", " triệu", " tỉ", " nghìn tỉ", " triệu tỉ");
+
+    //1. Hàm đọc số có 3 chữ số
+    function DocSo3ChuSo(baso) {
+        var tram;
+        var chuc;
+        var donvi;
+        var KetQua = "";
+        tram = parseInt(baso / 100);
+        chuc = parseInt((baso % 100) / 10);
+        donvi = baso % 10;
+        if (tram == 0 && chuc == 0 && donvi == 0) return "";
+        if (tram != 0) {
+            KetQua += ChuSo[tram] + " trăm ";
+            if ((chuc == 0) && (donvi != 0)) KetQua += " linh ";
+        }
+        if ((chuc != 0) && (chuc != 1)) {
+            KetQua += ChuSo[chuc] + " mươi";
+            if ((chuc == 0) && (donvi != 0)) KetQua = KetQua + " linh ";
+        }
+        if (chuc == 1) KetQua += " mười ";
+        switch (donvi) {
+            case 1:
+                if ((chuc != 0) && (chuc != 1)) {
+                    KetQua += " một ";
+                }
+                else {
+                    KetQua += ChuSo[donvi];
+                }
+                break;
+            case 5:
+                if (chuc == 0) {
+                    KetQua += ChuSo[donvi];
+                }
+                else {
+                    KetQua += " lăm ";
+                }
+                break;
+            default:
+                if (donvi != 0) {
+                    KetQua += ChuSo[donvi];
+                }
+                break;
+        }
+        return KetQua;
+    } // End fucntion Docsoco3chuso
+
+
+    Number.prototype.ReadNumber = function () {
+        var SoTien = this.valueOf();
+        var lan = 0;
+        var i = 0;
+        var so = 0;
+        var KetQua = "";
+        var tmp = "";
+        var ViTri = new Array();
+        if (SoTien < 0) return "Số tiền âm !";
+        if (SoTien == 0) return "Không đồng";
+        if (SoTien > 0) {
+            so = SoTien;
+        }
+        else {
+            so = -SoTien;
+        }
+        if (SoTien > 8999999999999999) {
+            //SoTien = 0;
+            return "Sô quá lớn!";
+        }
+        ViTri[5] = Math.floor(so / 1000000000000000);
+        if (isNaN(ViTri[5]))
+            ViTri[5] = "0";
+        so = so - parseFloat(ViTri[5].toString()) * 1000000000000000;
+        ViTri[4] = Math.floor(so / 1000000000000);
+        if (isNaN(ViTri[4]))
+            ViTri[4] = "0";
+        so = so - parseFloat(ViTri[4].toString()) * 1000000000000;
+        ViTri[3] = Math.floor(so / 1000000000);
+        if (isNaN(ViTri[3]))
+            ViTri[3] = "0";
+        so = so - parseFloat(ViTri[3].toString()) * 1000000000;
+        ViTri[2] = parseInt(so / 1000000);
+        if (isNaN(ViTri[2]))
+            ViTri[2] = "0";
+        ViTri[1] = parseInt((so % 1000000) / 1000);
+        if (isNaN(ViTri[1]))
+            ViTri[1] = "0";
+        ViTri[0] = parseInt(so % 1000);
+        if (isNaN(ViTri[0]))
+            ViTri[0] = "0";
+        if (ViTri[5] > 0) {
+            lan = 5;
+        }
+        else if (ViTri[4] > 0) {
+            lan = 4;
+        }
+        else if (ViTri[3] > 0) {
+            lan = 3;
+        }
+        else if (ViTri[2] > 0) {
+            lan = 2;
+        }
+        else if (ViTri[1] > 0) {
+            lan = 1;
+        }
+        else {
+            lan = 0;
+        }
+        for (i = lan; i >= 0; i--) {
+            tmp = DocSo3ChuSo(ViTri[i]);
+            KetQua += tmp;
+            if (ViTri[i] > 0) KetQua += Tien[i];
+            if ((i > 0) && (tmp.length > 0)) KetQua += ',';//&& (!string.IsNullOrEmpty(tmp))
+        }
+        if (KetQua.substring(KetQua.length - 1) == ',') {
+            KetQua = KetQua.substring(0, KetQua.length - 1);
+        }
+        KetQua = KetQua.substring(1, 2).toUpperCase() + KetQua.substring(2) + " đồng";
+        return KetQua;//.substring(0, 1);//.toUpperCase();// + KetQua.substring(1);
+    }
+
+    //$('#btnPrint').click(function () {
+    //    var content = $('.Bill').html();
+    //    Indonhang(content);
+    //});
+
+    //function Indonhang(content) {
+    //    var printWindow = window.open('', '', 'height=100%,width=100%');
+    //    printWindow.document.write('<html><head><title>DIV content</title>');
+    //    printWindow.document.write('</head><body>');
+    //    printWindow.document.write(content);
+    //    printWindow.document.write('</body></html>');
+    //    printWindow.document.close();
+    //    printWindow.print();
+
+    //}
+
+    $.fn.extend({
+        print: function () {
+            var frameName = 'printIframe';
+            var doc = window.frames[frameName];
+            if (!doc) {
+                $('<iframe>').hide().attr('name', frameName).appendTo(document.body);
+                doc = window.frames[frameName];
+            }
+            doc.document.body.innerHTML = this.html();
+            console.log(doc.document.body.innerHTML);
+            doc.window.print();
+            return this;
+        }
+    });
+
+</script>
+

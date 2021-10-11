@@ -1,0 +1,105 @@
+﻿@using Webbanhang.Models;
+@model IEnumerable<sanpham>
+@{
+    ViewBag.Title = "Quản Lý Sản Phẩm";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+    //khoi tao control webgrid
+}
+<h2>Danh sách sản phẩm</h2>
+<button style="float:right;margin: 10px; font-size: 13px" class="btn btn-info" onclick="parent.location='/QuanLySanPham/Create'">Tạo mới</button>
+<table id="myTable" class="table table-hover">
+    <thead class="bg-info">
+        <tr class="table-info">
+            <th style="text-align:center">STT</th>
+            <th style="text-align:center">Mã sản phẩm</th>
+            <th style="text-align:center">Tên sản phẩm</th>
+            <th style="text-align:center">Cấu hình</th>
+            <th style="text-align:center">Hình ảnh</th>
+            <th style="text-align:center">Sửa</th>
+            <th style="text-align:center">Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0;
+            foreach (var it in Model)
+            {
+                i++;
+                <tr style="text-align: center">
+                    <td>@i</td>
+                    <td>@it.MaSP </td>
+                    <td>@it.TenSP</td>
+                    <td>@it.CauHinh</td>
+                    <td><img width="100px" height="60px" class="img-thumbnail" src="~/Content/sanpham/@it.HinhAnh" /></td>
+                    <td>
+                        <a class="btn btn-info" href="/QuanLySanPham/Edit/@it.MaSP ">Sửa</a>
+                    </td>
+                    <td>
+                        <a onclick="return delete_infor(@it.MaSP )" class="btn btn-danger" data-toggle="modal" data-target="#myModal1">Xóa</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Xác nhận xóa</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                Bạn có muốn xóa sản phẩm này không?
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button id="btn_delete_infor" type="button" class="btn btn-info" data-dismiss="modal">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link type="text/css" rel="Stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": 'Display <select>' +
+                    '<option value="5">5</option>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="30">30</option>' +
+                    '<option value="-1">All</option>' +
+                    '</select> records'
+            }
+        });
+    });
+
+    function delete_infor(id) {
+        $("#btn_delete_infor").click(function () {
+            $.ajax({
+                url: '/QuanLySanPham/Delete',
+                data: { id: id },
+                type: 'GET',
+                success: location.href = '/QuanLySanPham/Index',
+            });
+        });
+    }
+</script>
+<style>
+    .total-world, .calenders, .cd-tabs, .footer {
+        display: none;
+    }
+
+    td > img {
+        width: 100px;
+        height: 60px;
+    }
+</style>

@@ -1,0 +1,22 @@
+﻿<link href="~/Content/css/style-login.css" rel="stylesheet" type="text/css" />
+<style>
+    h3:hover {
+        color: #EF5F21;
+    }
+    img:hover {
+        color: #EF5F21; 
+    }
+</style>
+<div id="divGiohang" class="cart box_1">
+    <a href="@Url.Action("Xemgiohang","GioHang")">
+        <h3>
+            <div  class="total">
+                <span>@ViewBag.Tongtien.ToString("#,##") VNĐ (@ViewBag.Tongsoluong sản phẩm)</span>
+            </div>
+            <img src="~/Content/images/cart.png" alt="">
+        </h3>
+    </a>
+    @*<p><a href="@Url.Action("Xemgiohang","GioHang")" class="simpleCart_empty">Empty Cart</a></p>*@
+
+</div>
+

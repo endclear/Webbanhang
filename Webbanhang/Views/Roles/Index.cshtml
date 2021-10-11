@@ -1,0 +1,66 @@
+﻿@using Webbanhang.Models
+@model IEnumerable<Role>
+@{
+    ViewBag.Title = "Quản Lý Quyền";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+}
+
+<link href="~/Content/Datatable/datatables.min.css" rel="stylesheet" />
+<style>
+    th {
+        text-align: center;
+    }
+</style>
+<h2> Danh sách các quyền trong hệ thống</h2>
+<div style="background:#fff;padding:5px">
+    <div style="margin-bottom:10px;float:right">
+        <a href="/Roles/Create" class="btn btn-success">Thêm mới</a>
+    </div>
+    <table id="RoleTable" class="table">
+        <thead class="bg-info">
+            <tr>
+                <th>STT</th>
+                <th>Mã quyền</th>
+                <th>Tên quyền</th>
+                <th>Sửa</th>
+                <th>Xóa</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+                foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td>@i</td>
+                        <td>@item.RoleID</td>
+                        <td>@item.RoleName</td>
+                        <td>@Html.ActionLink("Sửa", "Edit", "Roles", new { @RoleID = item.RoleID }, new { @class = "btn btn-info" })</td>
+                        <td><a href="#" class="btn btn-danger">Xóa</a></td>
+                    </tr>
+                    i++;
+                }
+
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="~/Content/Datatable/datatables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#RoleTable').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": 'Display <select>' +
+                    '<option value="5">5</option>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="30">30</option>' +
+                    '<option value="-1">All</option>' +
+                    '</select> records'
+            }
+        });
+    });
+</script>

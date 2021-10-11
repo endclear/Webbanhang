@@ -1,0 +1,62 @@
+﻿@using Webbanhang.Models
+@model IEnumerable<sanpham>
+@{
+    ViewBag.Title = "Sản Phẩm Sắp Hết Hàng";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+}
+
+<style>
+    th{
+        text-align:center;
+    }
+</style>
+<h2> Danh sách sản phẩm sắp hết hàng</h2><br />
+<table id="ListSpHetHang" class="table table-striped">
+    <thead class="bg-info">
+        <tr>
+            <th>STT</th>
+            <th>Mã sản phẩm</th>
+            <th>Tên sản phẩm</th>
+            <th>Hình ảnh</th>
+            <th>Số lượng tồn</th>
+            <th></th>
+        </tr>
+    <thead />
+    <tbody>
+        @{ int i = 0;
+            foreach (var it in Model)
+            {
+                i++;
+                <tr style="text-align: center">
+                    <td>@i</td>
+                    <td>@it.MaSP </td>
+                    <td>@it.TenSP</td>
+                    <td><img width="100px" height="60px" class="img-thumbnail" src="~/Content/sanpham/@it.HinhAnh" /></td>
+                    <td>@it.SoLuongTon</td>
+                    <td>
+                        <a class="btn btn-info" href="/NhapHang/BoSungSanPham/@it.MaSP ">Nhập thêm</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<link type="text/css" rel="Stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ListSpHetHang').DataTable({
+            "pageLength": 5,
+            "language": {
+                "lengthMenu": 'Display <select>' +
+                    '<option value="5">5</option>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="30">30</option>' +
+                    '<option value="-1">All</option>' +
+                    '</select> records'
+            }
+        });
+    });
+</script>

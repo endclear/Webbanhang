@@ -1,0 +1,84 @@
+﻿@using CaptchaMvc.HtmlHelpers;
+@using CaptchaMvc;
+ 
+@using Webbanhang.Models
+@model thanhvien
+@{
+    ViewBag.Title = "Dangky";
+    Layout = "~/Views/Layout/ProductLayout.cshtml";
+}
+<style>
+    .field-validation-error {
+        color: red !important
+    }
+
+    .validation-summary-errors {
+        color: red !important
+    }
+</style>
+<div class=" container">
+    <div id="register" class="register">
+        <h1 class="text-center">Đăng ký thành viên</h1>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="col-md-4 register-top-grid">
+                <h3>Thông tin cá nhân</h3>
+                <div>
+                    @Html.LabelFor(model => model.HoTen)
+                    @Html.EditorFor(model => model.HoTen)
+                    @Html.ValidationMessageFor(model => model.HoTen)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.DiaChi)
+                    @Html.EditorFor(model => model.DiaChi)
+                    @Html.ValidationMessageFor(model => model.DiaChi)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.DienThoai)
+                    @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { type = "number"} })
+                    @Html.ValidationMessageFor(model => model.DienThoai)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.Email)
+                    @Html.EditorFor(model => model.Email)
+                    @Html.ValidationMessageFor(model => model.Email)
+                </div>
+
+            </div>
+            <div class="col-md-4 register-bottom-grid register-top-grid">
+                <h3>Thông tin đăng nhập</h3>
+                <div>
+                    @Html.LabelFor(model => model.TaiKhoan)
+                    @Html.EditorFor(model => model.TaiKhoan)
+                    @Html.ValidationMessageFor(model => model.TaiKhoan)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.MatKhau)
+                    @Html.EditorFor(model => model.MatKhau, new { htmlAttributes = new { Type = "password" } })
+                    @Html.ValidationMessageFor(model => model.MatKhau)
+                </div>
+                <div>
+                    <label>Xác nhận mật khẩu</label>
+                    <input type="password" name="confirmPass" />
+                    <span id="LbErr" class="field-validation-valid validation-summary-errors">@ViewBag.Err</span>
+                </div>
+                <div>
+                    @Html.MathCaptcha()
+                </div>
+                <input type="submit" value="Đăng ký" >
+
+            </div>
+            <div class="clearfix"> </div>
+        }
+
+        <span>@ViewBag.thongbao</span>
+    </div>
+</div>
+@*<script>
+    function Location() {
+        window.location.reload();
+    }
+</script>*@
+

@@ -1,0 +1,77 @@
+﻿@using Webbanhang.Models;
+@using PagedList.Mvc;
+
+@model PagedList.IPagedList<sanpham>
+@{
+    ViewBag.Title = "KQTimkiem";
+    Layout = "~/Views/Layout/ProductLayout.cshtml";
+}
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<style>
+    .txtTimkiem{
+        width:300px;
+        border: 1px solid #000;
+    }
+    .btn{
+        margin-left:5px;
+    }
+</style>
+@*form tim kiem ajax*@
+@using (Ajax.BeginForm("timkiemPartial", "Timkiem", new AjaxOptions { UpdateTargetId = "KQTimkiem", InsertionMode = InsertionMode.Replace }))
+{ 
+    <div style="display:flex">
+        <input type="text" class="txtTimkiem" value="" name="sTukhoa" placeholder="Nhập vào tên sản phẩm cần tìm kiếm" />
+        <input type="submit" class="btn btn-info mr-2" value="Search" />
+    </div>
+    <br />
+}
+<div id="KQTimkiem" style="margin-top:10px">
+    <div class="col-md-9 product1">
+        <div class=" bottom-product">
+            @foreach (var item in Model.OrderBy(n => n.DonGia))
+            {
+
+                <div class="col-md-4 bottom-product simpleCart_shelfItem">
+                    <div class="product-at ">
+                        <a href="single.html">
+                            <img class="img-responsive" src="@Url.Content("~/Content/sanpham/" + item.HinhAnh)" alt="">
+                            <div class="pro-grid">
+                                <span class="buy-in">Đặt Mua</span>
+                            </div>
+                        </a>
+                    </div>
+                    <p class="tun">@item.TenSP</p>
+                    <a  href="#" data-masp="@item.MaSP" class="item_add"><p class="number item_price">@item.DonGia.Value.ToString("#,##") VNĐ</p></a>
+                    @*thêm giỏ hàng ajax*@
+                    @*@Ajax.ActionLink(item.DonGia.Value.ToString("#,##") + " VNĐ", "themgiohangAjax", "GioHang", new { @masp = item.MaSP, @sUrl = Request.Url.ToString() }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "giohang", InsertionMode = InsertionMode.Replace }, new { @class = "item_add number item_price" })*@
+
+                </div>
+
+
+
+            }
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+    <div class="dlink">
+        Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount
+        @Html.PagedListPager(Model, Page => Url.Action("KQTimkiem", new { Page = Page, @sTukhoa = ViewBag.Tukhoa }))
+    </div>
+</div>
+<script>
+    $('.item_add').click(function () {
+        var maSP = $(this).attr('data-masp')
+        $.ajax({
+            type: 'POST',
+            data: {
+                MaSP: maSP
+            },
+            url: '/GioHang/themgiohangAjax',
+            success: function (ketqua) {
+                $('#divGiohang').html(ketqua);
+            }
+        })
+    });
+</script>
+
+

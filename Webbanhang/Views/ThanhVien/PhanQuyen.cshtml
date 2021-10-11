@@ -1,0 +1,78 @@
+﻿@using Webbanhang.Models
+@model thanhvien
+@{
+    ViewBag.Title = "Phân Quyền Thành Viên";
+    Layout = "~/Views/Layout/_AdminLayout.cshtml";
+}
+@{
+    IEnumerable<ThanhVien_Role> thanhvien_role = ViewBag.Thanhvien_Role as IEnumerable<ThanhVien_Role>;
+    IEnumerable<Role> Role = ViewBag.Role as IEnumerable<Role>;
+}
+<div style="border-bottom:1px solid #808080;padding-bottom:4px;margin:5px">
+    <h3> Phân quyền cho thành viên: <label class="text-danger">@Model.HoTen</label></h3>
+    <h4 style="margin-top:10px">Loại thành viên: <label>@Model.loaithanhvien.TenLoaiTV</label></h4>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.Hidden("MaTV", Model.MaTV)
+<div>
+    @if (thanhvien_role != null)
+    {
+        for (int j = 0; j < Role.Count(); j++)
+        {
+            int k = 0;
+            for (int i = 0; i < thanhvien_role.Count(); i++)
+            {
+                if (Role.ElementAt(j).RoleID == thanhvien_role.ElementAt(i).RoleID)
+                {
+                    k++;
+                    break;
+                }
+            }
+            if (k != 0 && @Role.ElementAt(j).RoleID != "Developer")
+            {
+                <div class="col-md-4" style="height:30px">
+                    @*<input type="hidden" value="@Model.MaTV" name="@Url.Content("["+j+"].MaTV")" />*@
+                    <input class="check_box" style="width:16px;height:16px" type="checkbox" checked="checked" name="@Url.Content("["+j+"].RoleID")" value="@Role.ElementAt(j).RoleID" />
+                    <span style="margin: 0 auto"> @Role.ElementAt(j).RoleName</span>
+                </div>
+            }
+            else if(@Role.ElementAt(j).RoleID != "Developer")
+            {
+                <div class="col-md-4" style="height:30px">
+                    <input class="check_box" style="width:16px;height:16px" type="checkbox" name="@Url.Content("["+j+"].RoleID")" value="@Role.ElementAt(j).RoleID" />
+                    <span style="margin:0 auto">@Role.ElementAt(j).RoleName</span>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        int l = 0;
+        foreach (var item in Role)
+        {
+            <div class="col-md-4" style="height:30px">
+                <input class="check_box" style="width:16px;height:16px" type="checkbox" name="@Url.Content("["+l+"].RoleID")" value="@item.RoleID" />
+                <span style="margin:0 auto">@item.RoleName</span>
+            </div>
+            l++;
+        }
+    }
+</div>
+    <div class="clearfix" style="border-bottom:1px solid #808080;padding-bottom:4px;margin:5px"></div>
+    <input id="submitRole" type="submit" value="Save" class="btn btn-success" />
+    
+}
+
+<script>
+    $('#submitRole').click(function () {
+        i = 0; 
+        $('.check_box').each(function () {
+            if ($(this).is(':checked')){
+                $(this).attr("name", "[" + i+"].RoleID");
+                i++;
+            }
+        });
+    });
+</script>

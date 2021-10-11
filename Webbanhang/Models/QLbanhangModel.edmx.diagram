@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="aea08f5f9d0e4d8380a2cedecb1b49c4" Name="Diagram1" ZoomLevel="86">
+        <EntityTypeShape EntityType="QLbanhangModel.BinhLuan" Width="1.5" PointX="5.5" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.CT_DonDH" Width="1.5" PointX="5.25" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.CT_phieunhap" Width="1.5" PointX="3.125" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.dondathang" Width="1.5" PointX="7.625" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.Khachhang" Width="1.5" PointX="7.625" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.loaisanpham" Width="1.5" PointX="1" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.loaithanhvien" Width="1.5" PointX="7.625" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.NhaCungCap" Width="1.5" PointX="0.875" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.NhaSX" Width="1.5" PointX="1" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.PhieuNhap" Width="1.5" PointX="0.875" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.sanpham" Width="1.5" PointX="3" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLbanhangModel.thanhvien" Width="1.5" PointX="5.5" PointY="8.375" IsExpanded="true" />
+        <AssociationConnector Association="QLbanhangModel.fk_BinhLuan_toSanpham" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_BinhLuan_toThanhvien" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_CT_DonDH_toDonDH" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_CT_DonDH_toSanpham" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_ctphieunhap_toPhieunhap" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_ctphieunhap_toSanpham" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_dondh_toKH" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_khachhang_toThanhvien" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_sanpham_toLoaisanpham" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_thanhvien_toLoaitv" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.FK_PhieuNhap_ToTable" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_sanpham_toNhaCungCap" ManuallyRouted="false" />
+        <AssociationConnector Association="QLbanhangModel.fk_sanpham_toNhasx" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="QLbanhangModel.Role" Width="1.5" PointX="7.625" PointY="13.125" />
+        <EntityTypeShape EntityType="QLbanhangModel.ThanhVien_Role" Width="1.5" PointX="9.875" PointY="10.5" />
+        <AssociationConnector Association="QLbanhangModel.FK_ThanhVien_Role_Role" />
+        <AssociationConnector Association="QLbanhangModel.FK_ThanhVien_Role_Thanhvien" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

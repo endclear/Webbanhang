@@ -1,0 +1,34 @@
+﻿@using Webbanhang.Models
+@model IEnumerable<sanpham>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Layout/Home_Layout.cshtml";
+}
+@{ 
+    //IEnumerable<sanpham> lstDTM = (IEnumerable<sanpham>)ViewBag.listDTM;
+    IEnumerable<sanpham> lstDTM = ViewBag.listDTM as IEnumerable<sanpham>;
+    IEnumerable<sanpham> lstTBM = ViewBag.listTBM as IEnumerable<sanpham>;
+    IEnumerable<sanpham> lstLTM = ViewBag.listLTM as IEnumerable<sanpham>;
+}
+
+@*điện thoại mới*@
+<div class="container">
+    @Html.Partial("~/Views/Sanpham/SanphamStyle1Partial.cshtml",lstDTM)
+</div>
+@*Máy tính bảng*@
+<div class="container">
+    @Html.Partial("~/Views/Sanpham/SanphamStyle1Partial.cshtml", lstLTM)
+</div>
+@*laptop mới*@
+<div class="container">
+    @Html.Partial("~/Views/Sanpham/SanphamStyle2Partial.cshtml", lstTBM)
+    <div class="clearfix"> </div>
+</div>
+
+    
+
+
+
+
+

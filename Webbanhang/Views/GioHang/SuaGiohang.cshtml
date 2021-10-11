@@ -1,0 +1,69 @@
+﻿@using Webbanhang.Models
+@model ItemGioHang
+
+@{
+    ViewBag.Title = "SuaGiohang";
+    Layout = "~/Views/Layout/ProductLayout.cshtml";
+}
+
+@{ 
+    List<ItemGioHang> lstGiohang = ViewBag.Giohang as List<ItemGioHang>;
+}
+<div class="col-md-9 product1">
+    <table class="table table-responsive table-hover table-bordered">
+        <tr>
+            <td>Mã sản phẩm</td>
+            <td>Tên sản phẩm</td>
+            <td>Hình ảnh</td>
+            <td>Số lượng</td>
+            <td>Đơn giá</td>
+            <td>Thành tiền</td>
+        </tr>
+        @foreach (var item in lstGiohang)
+        {
+            //sam pham co ma sp duoc chinh sua
+            if (Model.masp == item.masp)
+            {
+                using (Html.BeginForm("capnhatgiohang", "GioHang")) 
+                {
+                    <tr>
+                        <td>@item.masp @Html.Hidden("masp", item.masp)</td>
+                        <td>@item.tensp</td>
+                        <td><img src="@Url.Content("~/Content/sanpham/"+item.hinhanh)" class="img-thumbnail img-responsive" width="100px" height="60px" /></td>
+                        <td>@Html.TextBox("soluong", item.soluong,new { @class="soluongUpdate"})
+                            <p id="message"></p>
+                        </td>
+                        <td>@item.dongia.ToString("#,##") đồng</td>
+                        <td>@item.thanhtien.ToString("#,##") đồng</td>
+                        <td><input id="btnUpdate" type="submit" value="Cập nhật" class="btn btn-success" /></td>
+                        <td>@Html.ActionLink("Xóa", "Xoagiohang", new { @masp = item.masp }, new { @class = "btn btn-danger" })</td>
+                    </tr>
+                }
+
+            }
+            else
+            {
+                <tr>
+                    <td>@item.masp</td>
+                    <td>@item.tensp</td>
+                    <td><img src="@Url.Content("~/Content/sanpham/" + item.hinhanh)" class="img-thumbnail img-responsive" width="100px" height="60px" /></td>
+                    <td>@item.soluong</td>
+                    <td>@item.dongia.ToString("#,##") đồng</td>
+                    <td>@item.thanhtien.ToString("#,##") đồng</td>
+                    <td>@Html.ActionLink("Sửa", "SuaGiohang", new { @masp = item.masp }, new { @class = "btn btn-info" })</td>
+                </tr>
+            }
+
+        }
+    </table>
+</div>
+<script type="text/javascript">
+    $("#btnUpdate").click(function () {
+        var soluong = $(".soluongUpdate").val();
+        if (isNaN(soluong) == true || soluong < 0) {
+            $("#message").text("Số lượng không hợp lệ");
+            return false;
+        }
+    });
+</script>
+
